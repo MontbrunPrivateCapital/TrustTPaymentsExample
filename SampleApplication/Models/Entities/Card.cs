@@ -6,5 +6,6 @@
         public string CVV    { get; set; }
         public string Year   { get; set; }
         public string Month  { get; set; }
+        public Customer Customer { get; set; }
     }
 }

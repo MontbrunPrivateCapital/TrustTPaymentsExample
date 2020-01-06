@@ -10,5 +10,6 @@ namespace SampleApplication.Models.Entities
         public string Name { get; set; }
         public string Swift { get; set; }
         public string IBAN { get; set; }
+        public Customer Customer { get; set; }
     }
 }

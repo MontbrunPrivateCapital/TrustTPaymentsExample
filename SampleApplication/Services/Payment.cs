@@ -23,7 +23,7 @@ namespace SampleApplication.Services
         /// </summary>
         /// <param name="customer">local customer (entity)</param>
         /// <returns>customer with trustt id</returns>
-        public Customer CreateCustomer(Customer customer)
+        public Guid CreateCustomer(Customer customer)
         {
             // customer as requiere SDK
             var tc = new SDK.Customer
@@ -45,7 +45,7 @@ namespace SampleApplication.Services
             customer.TrusttId = response.Payload.Id;
 
             // get back customer
-            return customer;
+            return customer.Id;
         }
 
 
