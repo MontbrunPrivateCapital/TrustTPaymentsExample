@@ -4,25 +4,32 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using SampleApplication.Data;
 using SampleApplication.Models.Entities;
+using SampleApplication.Services;
 
 namespace SampleApplication.Controllers
 {
     public class CardsController : Controller
     {
         private readonly DataContext _context;
+        private readonly Payment _payment;
 
-        public CardsController(DataContext context)
+        public CardsController(
+            Payment payment,
+            DataContext context)
         {
+            _payment = payment;
             _context = context;
         }
 
-        // GET: Cards
-        public async Task<IActionResult> Index()
+        // GET: Cards/5
+        public async Task<IActionResult> Index(Guid id)
         {
-            return View(await _context.Cards.ToListAsync());
+            ViewData["CustomerId"] = id.ToString();
+            return View(await _context.Cards.Where(c => c.Customer.Id == id).ToListAsync());
         }
 
         // GET: Cards/Details/5
@@ -44,8 +51,9 @@ namespace SampleApplication.Controllers
         }
 
         // GET: Cards/Create
-        public IActionResult Create()
+        public IActionResult Create(Guid id)
         {
+            ViewData["CustomerId"] = id.ToString();
             return View();
         }
 
@@ -54,16 +62,16 @@ namespace SampleApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Number,CVV,Year,Month,Id")] Card card)
+        public async Task<IActionResult> Create([Bind("Number,CVV,Year,Month,Id,CustomerId")] Card card)
         {
             if (ModelState.IsValid)
             {
                 card.Id = Guid.NewGuid();
+                _payment.CreateCard(card);
                 _context.Add(card);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            return View(card);
+            return RedirectToAction("Index", new RouteValueDictionary(new { Id = card.CustomerId }));
         }
 
         // GET: Cards/Edit/5

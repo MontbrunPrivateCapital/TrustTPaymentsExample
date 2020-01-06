@@ -44,6 +44,10 @@
                 @Html.DisplayFor(modelItem => item.TrusttId)
             </td>
             <td>
+                <a asp-action="Index" asp-controller="Cards" asp-route-id="@item.Id">Cards</a> |
+                <a asp-action="Index" asp-controller="Accounts" asp-route-id="@item.Id">Accounts</a>
+            </td>
+            <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>

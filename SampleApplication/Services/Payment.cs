@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SampleApplication.Data;
 using SampleApplication.Models.Entities;
 using TrustTPaymentSDK;
 using SDK = TrustTPaymentSDK.Models;
@@ -11,10 +12,36 @@ namespace SampleApplication.Services
     public class Payment
     {
         private readonly TrusttAPI _trustt;
+        private readonly DataContext _context;
 
-        public Payment(TrusttAPI trustt)
+        public Payment(
+            DataContext context,
+            TrusttAPI trustt)
         {
+            _context = context;
             _trustt = trustt;
+        }
+
+
+        public Guid CreateCard(Card card)
+        {
+            var tc = new SDK.Card
+            {
+                CVV = card.CVV,
+                ExpirationMonth = card.Month,
+                ExpirationYear = card.Year,
+                CustomerId = _context.Customers.FirstOrDefault(c => c.Id == card.CustomerId).TrusttId
+            };
+
+            var response = _trustt.AddCard(tc);
+
+            // handle request's error
+            // throw exception if was not posible to create
+            if (response.IsError)
+                throw new OperationCanceledException
+                    (response.ErrorMessage);
+
+            return response.Payload.Id;
         }
 
 

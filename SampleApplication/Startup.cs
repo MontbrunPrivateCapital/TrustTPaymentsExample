@@ -27,8 +27,8 @@ namespace SampleApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<Payment>();
-            services.AddSingleton<TrusttAPI>();
+            services.AddTransient<Payment>();
+            services.AddTransient<TrusttAPI>();
             services.AddSingleton<ITrustTSettings>(t =>
                 Configuration.GetSection("Trustt").Get<TrustTSettings>());
 
@@ -60,6 +60,7 @@ namespace SampleApplication
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
             });
         }
     }

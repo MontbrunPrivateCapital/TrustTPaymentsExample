@@ -164,7 +164,6 @@ namespace SampleApplication.Controllers
 
         private void CreateSampleCustomer()
         {
-            return;
             _context.Customers.Add(
                 new Customer
                 {
@@ -179,6 +178,15 @@ namespace SampleApplication.Controllers
                             Number = "969989247298347298",
                             Month = "1",
                             Year = "2021"
+                        }
+                    },
+                    Accounts = new List<Account>
+                    {
+                        new Account
+                        {
+                            IBAN = "EKHSJDDAAD",
+                            Swift = "12313123123",
+                            Name = "SOME BODY"
                         }
                     }
                 });

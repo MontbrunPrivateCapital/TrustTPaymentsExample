@@ -20,9 +20,9 @@ namespace SampleApplication.Controllers
         }
 
         // GET: Accounts
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(Guid customerId)
         {
-            return View(await _context.Accounts.ToListAsync());
+            return View(await _context.Accounts.Where(c => c.Customer.Id == customerId).ToListAsync());
         }
 
         // GET: Accounts/Details/5
@@ -54,7 +54,7 @@ namespace SampleApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Swift,IBAN,Id")] Account account)
+        public async Task<IActionResult> Create([Bind("Name,Swift,IBAN")] Account account)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +87,7 @@ namespace SampleApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Swift,IBAN,Id")] Account account)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Name,Swift,IBAN")] Account account)
         {
             if (id != account.Id)
             {
