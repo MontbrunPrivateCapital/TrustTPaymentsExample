@@ -4,25 +4,32 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using SampleApplication.Data;
 using SampleApplication.Models.Entities;
+using SampleApplication.Services;
 
 namespace SampleApplication.Controllers
 {
     public class AccountsController : Controller
     {
         private readonly DataContext _context;
+        private readonly Payment _trustt;
 
-        public AccountsController(DataContext context)
+        public AccountsController(
+            Payment trustt,
+            DataContext context)
         {
+            _trustt = trustt;
             _context = context;
         }
 
         // GET: Accounts
-        public async Task<IActionResult> Index(Guid customerId)
+        public async Task<IActionResult> Index(Guid id)
         {
-            return View(await _context.Accounts.Where(c => c.Customer.Id == customerId).ToListAsync());
+            ViewData["CustomerId"] = id.ToString();
+            return View(await _context.Accounts.Where(c => c.Customer.Id == id).ToListAsync());
         }
 
         // GET: Accounts/Details/5
@@ -44,8 +51,9 @@ namespace SampleApplication.Controllers
         }
 
         // GET: Accounts/Create
-        public IActionResult Create()
+        public IActionResult Create(Guid id)
         {
+            ViewData["CustomerId"] = id.ToString();
             return View();
         }
 
@@ -54,14 +62,15 @@ namespace SampleApplication.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Swift,IBAN")] Account account)
+        public async Task<IActionResult> Create([Bind("Name,Swift,IBAN,CustomerId")] Account account)
         {
             if (ModelState.IsValid)
             {
                 account.Id = Guid.NewGuid();
+                _trustt.CreateBankAccount(account);
                 _context.Add(account);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", new RouteValueDictionary(new { Id = account.CustomerId }));
             }
             return View(account);
         }

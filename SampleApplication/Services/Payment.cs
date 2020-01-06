@@ -23,6 +23,39 @@ namespace SampleApplication.Services
         }
 
 
+        /// <summary>
+        /// Create a bank account related to a customer.
+        /// </summary>
+        /// <param name="account">bank account info</param>
+        /// <returns>created bank account in trustt</returns>
+        public Guid CreateBankAccount(Account account)
+        {
+            var tba = new SDK.BankAccount
+            {
+                CustomerId = _context.Customers.FirstOrDefault(c => c.Id == account.CustomerId).TrusttId,
+                BeneficiaryName = account.Name,
+                BeneficiarySwift = account.Swift,
+                IBAN = account.IBAN
+            };
+
+            var response = _trustt.AddBankAccount(tba);
+
+            // handle request's error
+            // throw exception if was not posible to create
+            if (response.IsError)
+                throw new OperationCanceledException
+                    (response.ErrorMessage);
+
+            return response.Payload.Id;
+        }
+
+
+
+        /// <summary>
+        /// Add a card to trustt api.
+        /// </summary>
+        /// <param name="card">card entity holding data</param>
+        /// <returns>created trustt card id</returns>
         public Guid CreateCard(Card card)
         {
             var tc = new SDK.Card
