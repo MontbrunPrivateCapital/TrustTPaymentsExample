@@ -12,7 +12,7 @@ namespace SampleApplication.Services
     public class Payment
     {
         private readonly TrusttAPI _trustt;
-        private readonly DataContext _context;
+        private readonly DataContext _context; // TODO fix this, breaking architecture
 
         public Payment(
             DataContext context,
@@ -27,11 +27,11 @@ namespace SampleApplication.Services
         /// Create a bank account related to a customer.
         /// </summary>
         /// <param name="account">bank account info</param>
-        /// <returns>created bank account in trustt</returns>
+        /// <returns>created bank account ID at trustt</returns>
         public Guid CreateBankAccount(Account account)
         {
             var tba = new SDK.BankAccount
-            {
+            {                 // TODO _context should not be here
                 CustomerId = _context.Customers.FirstOrDefault(c => c.Id == account.CustomerId).TrusttId,
                 BeneficiaryName = account.Name,
                 BeneficiarySwift = account.Swift,
@@ -62,7 +62,7 @@ namespace SampleApplication.Services
             {
                 CVV = card.CVV,
                 ExpirationMonth = card.Month,
-                ExpirationYear = card.Year,
+                ExpirationYear = card.Year, // TODO _context should not be here
                 CustomerId = _context.Customers.FirstOrDefault(c => c.Id == card.CustomerId).TrusttId
             };
 
