@@ -16,6 +16,7 @@ namespace SampleApplication.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Card> Cards { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<SampleApplication.Models.Entities.Charge> Charge { get; set; }
 
 
     }

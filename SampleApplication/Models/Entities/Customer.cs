@@ -18,5 +18,6 @@ namespace SampleApplication.Models.Entities
         public Guid TrusttId { get; set; }
         public ICollection<Card> Cards {get; set;}
         public ICollection<Account> Accounts {get; set;}
+        public ICollection<Charge> Charges {get; set;}
     }
 }

@@ -20,12 +20,10 @@
                 @Html.DisplayNameFor(model => model.Email)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ShippingAddress)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.TrusttId)
             </th>
-            <th></th>
+            <th>Operations</th>
+            <th>CRUD</th>
         </tr>
     </thead>
     <tbody>
@@ -38,12 +36,10 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ShippingAddress)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.TrusttId)
             </td>
             <td>
+                <a asp-action="Index" asp-controller="Charges" asp-route-id="@item.Id">Charge</a> |
                 <a asp-action="Index" asp-controller="Cards" asp-route-id="@item.Id">Cards</a> |
                 <a asp-action="Index" asp-controller="Accounts" asp-route-id="@item.Id">Accounts</a>
             </td>

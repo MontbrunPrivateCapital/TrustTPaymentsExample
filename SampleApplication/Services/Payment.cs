@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SampleApplication.Common;
 using SampleApplication.Data;
 using SampleApplication.Models.Entities;
 using TrustTPaymentSDK;
@@ -21,6 +23,45 @@ namespace SampleApplication.Services
             _context = context;
             _trustt = trustt;
         }
+
+
+        public Charge Charge(Charge charge)
+        {
+            var tc = new SDK.Charge
+            {
+                Amount = charge.Amount,
+                Currency = PaymentCurrency.EUR == charge.Currency ? "EUR" : "USD",
+            };
+
+
+            if (charge.ChargeType == ChargeType.Card)
+                tc.CardId =
+                    _context.Customers.Include(c => c.Cards)
+                        .FirstOrDefault(u => u.Id == charge.CustomerId)
+                        .Cards.FirstOrDefault().Id.ToString();
+            else
+                tc.BankAccountId =
+                    _context.Customers.Include(c => c.Accounts)
+                        .FirstOrDefault(u => u.Id == charge.CustomerId)
+                        .Accounts.FirstOrDefault().Id.ToString();
+
+
+            var transaction = _trustt.Charge(tc);
+
+            if (transaction != default && transaction.IsOk)
+            {
+                charge.TrusttTransactionId = _trustt.Charge(tc).Payload.Id;
+                charge.ChargeStatus = ChargeStatus.Complete;
+            }
+            else
+            {
+                charge.ChargeStatus = ChargeStatus.Rejected;
+            }
+
+            charge.EndTime = DateTime.Now;
+            return charge;
+
+        } // method
 
 
         /// <summary>
