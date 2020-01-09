@@ -106,6 +106,7 @@ namespace SampleApplication.Services
         {
             var tc = new SDK.Card
             {
+                Number = card.Number,
                 CVV = card.CVV,
                 ExpirationMonth = card.Month,
                 ExpirationYear = card.Year, // TODO _context should not be here
