@@ -1,8 +1,52 @@
-﻿@{
+﻿@model SampleApplication.Models.ViewModels.MyAccountStatus
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h2 class="display-4">My E-Commerce Application</h2>
 </div>
+
+
+<h2>Account Information</h2>
+<table class="table">
+
+    <tr>
+        <td>Email</td>
+        <td>@Model.Email</td>
+    </tr>
+
+    <tr>
+        <td>Personal Name</td>
+        <td>@Model.ContactName</td>
+    </tr>
+
+    <tr>
+        <td>Account Type</td>
+        <td>@Model.AccountType</td>
+    </tr>
+
+    <tr>
+        <td>Gold Reserve</td>
+        <td>@Model.Gold.Sum(g => g.TroyOz) troy Oz of gold in @Model.Gold.Count pieces</td>
+    </tr>
+
+</table>
+
+<h2>Gold reserve details</h2>
+<table class="table">
+
+    <th>Gold Purity (in karats)</th>
+    <th>Piece Weight (in troy oz)</th>
+
+    @foreach (var gold in Model.Gold)
+    {
+        <tr>
+            <td>@gold.Purity</td>
+            <td>@gold.TroyOz</td>
+        </tr>
+
+    }
+
+</table>

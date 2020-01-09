@@ -57,6 +57,7 @@ namespace SampleApplication.Controllers
             return View();
         }
 
+
         // POST: Cards/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -74,6 +75,7 @@ namespace SampleApplication.Controllers
             return RedirectToAction("Index", new RouteValueDictionary(new { Id = card.CustomerId }));
         }
 
+
         // GET: Cards/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
@@ -89,6 +91,7 @@ namespace SampleApplication.Controllers
             }
             return View(card);
         }
+
 
         // POST: Cards/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 

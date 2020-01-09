@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using SampleApplication.Common;
 using SampleApplication.Data;
 using SampleApplication.Models.Entities;
+using SampleApplication.Models.ViewModels;
 using TrustTPaymentSDK;
 using SDK = TrustTPaymentSDK.Models;
 
@@ -13,7 +14,7 @@ namespace SampleApplication.Services
 {
     public class Payment
     {
-        private readonly TrusttAPI _trustt;
+        private readonly TrusttAPI _api;
         private readonly DataContext _context; // TODO fix this, breaking architecture
 
         public Payment(
@@ -21,7 +22,23 @@ namespace SampleApplication.Services
             TrusttAPI trustt)
         {
             _context = context;
-            _trustt = trustt;
+            _api = trustt;
+        }
+
+
+        public MyAccountStatus MyStatus()
+        {
+            var accs = _api.GetAccountStatus().Payload;
+            var gold = _api.GoldReserve().Collection;
+
+            return new MyAccountStatus
+            {
+                AccountType = accs.AccountType,
+                Address = accs.Address,
+                ContactName = accs.ContactName,
+                Email = accs.Email,
+                Gold = gold.OrderByDescending(g => g.Purity).ToList()
+            };
         }
 
 
@@ -34,11 +51,11 @@ namespace SampleApplication.Services
                 CustomerId = charge.CustomerId
             };
 
-            var transaction = _trustt.Charge(tc);
+            var transaction = _api.Charge(tc);
 
             if (transaction != default && transaction.IsOk)
             {
-                charge.TrusttTransactionId = _trustt.Charge(tc).Payload.Id;
+                charge.TrusttTransactionId = _api.Charge(tc).Payload.Id;
                 charge.ChargeStatus = ChargeStatus.Complete;
             }
             else
@@ -67,7 +84,7 @@ namespace SampleApplication.Services
                 IBAN = account.IBAN
             };
 
-            var response = _trustt.AddBankAccount(tba);
+            var response = _api.AddBankAccount(tba);
 
             // handle request's error
             // throw exception if was not posible to create
@@ -95,7 +112,7 @@ namespace SampleApplication.Services
                 CustomerId = _context.Customers.FirstOrDefault(c => c.Id == card.CustomerId).TrusttId
             };
 
-            var response = _trustt.AddCard(tc);
+            var response = _api.AddCard(tc);
 
             // handle request's error
             // throw exception if was not posible to create
@@ -122,7 +139,7 @@ namespace SampleApplication.Services
             };
 
             // customer as was created in sdk
-            var response  = _trustt.AddCustomer(tc);
+            var response  = _api.AddCustomer(tc);
 
             // handle request's error
             // throw exception if was not posible to create
