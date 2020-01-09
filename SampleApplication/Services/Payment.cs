@@ -30,21 +30,9 @@ namespace SampleApplication.Services
             var tc = new SDK.Charge
             {
                 Amount = charge.Amount,
-                Currency = PaymentCurrency.EUR == charge.Currency ? "EUR" : "USD",
+                Currency = SDK.ChargeCurrency.EUR,
+                CustomerId = charge.CustomerId
             };
-
-
-            if (charge.ChargeType == ChargeType.Card)
-                tc.CardId =
-                    _context.Customers.Include(c => c.Cards)
-                        .FirstOrDefault(u => u.Id == charge.CustomerId)
-                        .Cards.FirstOrDefault().Id.ToString();
-            else
-                tc.BankAccountId =
-                    _context.Customers.Include(c => c.Accounts)
-                        .FirstOrDefault(u => u.Id == charge.CustomerId)
-                        .Accounts.FirstOrDefault().Id.ToString();
-
 
             var transaction = _trustt.Charge(tc);
 
@@ -75,7 +63,7 @@ namespace SampleApplication.Services
             {                 // TODO _context should not be here
                 CustomerId = _context.Customers.FirstOrDefault(c => c.Id == account.CustomerId).TrusttId,
                 BeneficiaryName = account.Name,
-                BeneficiarySwift = account.Swift,
+                Swift = account.Swift,
                 IBAN = account.IBAN
             };
 
