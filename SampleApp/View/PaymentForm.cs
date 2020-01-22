@@ -16,22 +16,32 @@ namespace SampleApp.View
             InitializeComponent();
             _faker = faker;
             _api = api;
-            textCardHash.Text = _faker.Random.Hash();
-            textPinHash.Text = _faker.Random.Hash();
         }
 
 
         private void RequestPayment_Click(object sender, EventArgs e)
         {
+            // close dialog
+            Close();
+
+            if (numericAmount.Value < 1)
+            {
+                MessageBox.Show(
+                    "Please, specify a valid money amount.",
+                    "invalid amount",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                return;
+            }
+
             // populate some random hash data there
             var payment = new Payment
             {
-                CardHash = textCardHash.Text,
-                PinHash = textPinHash.Text
+                Payload = textPayload.Text,
+                Currency = "USD",
+                Amount = Convert.ToInt64(numericAmount.Value * 100)
             };
 
-            // close dialog
-            Close();
 
             try
             {

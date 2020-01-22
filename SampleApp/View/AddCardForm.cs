@@ -30,12 +30,10 @@ namespace SampleApp.View
 
             Close();
 
-            var card = new Card
+            var card = new CardInfo
             {
-                CVV = textCVV.Text,
-                ExpirationMonth = textMonth.Text,
-                ExpirationYear = textYear.Text,
-                Number = textCardNumber.Text
+                Email = textBoxEmail.Text,
+                Payload = textCardNumber.Text
             };
 
             try
@@ -43,7 +41,7 @@ namespace SampleApp.View
                 var add = _api.CardAttach(card);
 
                 MessageBox.Show(
-                    $"Card Hash Data: {add.CardHash}",
+                    $"Current card ID is: {add.CardId}",
                     "card succesfully add",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -51,7 +49,7 @@ namespace SampleApp.View
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    "This not looks like a valid card.", "invalid card data",
+                    ex.Message, "error adding card",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 

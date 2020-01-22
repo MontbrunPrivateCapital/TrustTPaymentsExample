@@ -25,13 +25,24 @@ namespace SampleApp.View
         {
             Close();
 
-            var mailv = new Verification { Email = textEmail.Text};
+            var mailv = new Verification { Email = textEmail.Text };
 
+            try
+            {
                 _api.SendVerification(mailv);
-
+            }
+            catch (Exception ex)
+            {
                 MessageBox.Show(
-                    "Verification email sent!", "email sent",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                "There is not user with such email.", "mail sending error",
+                MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                return;
+            }
+
+            MessageBox.Show(
+                "Verification email sent!", "email sent",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         } // event
 
