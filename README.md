@@ -1,20 +1,50 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+
+This is the Trustt Payment API Developer SDK's official documentation.
+
+Using this tool, you and your customers, being Trustt clients, could perform payments using current owned gold resources. Yes, is what are you thinking, old vintage style, payment using gold, but using twenty one century technology.
 
 # Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+- lack, define authenticacion's credential obtaining
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+First, instanciate Trustt SDK main object using a **TrusttAPI** instance. Use a 
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+```C#
+var _api = 
+    new TrusttAPI(new TrustTSettings
+        { Host = "trustt-payments-api.azurewebsites.net",
+        Bearer = "t0k3n3xample99777asdfipsumlorem" });
+```
+
+First, instantiate Trustt SDK main object using a **TrusttAPI** instance. Constructor expects a **TrustTSettings** as argument, this object contains all the API's client configuration. So, this mean, you could use in Dependency Injection like this.
+
+```json appsetting.json
+// this is the appsettings.json
+"Trustt":{
+    "Host":"trustt-payments-api.azurewebsites.net",
+    "Bearer" : "t0k3n3xample99777asdfipsumlorem"
+}
+```
+
+```C# 
+// this is your «services» section in Startup.cs
+services.AddTransient(p =>
+    Configuration.GetSection("Trustt").Get<TrustTSettings>());
+
+services.AddTransient<TrusttAPI>()
+```
+
+Once we have an instance of **TrusttAPI**, we can proceed to query the api as high level object. The following example, fetch trustt fees and gold price.
+
+```C#
+var goldPrice = fees.GoldPrice;
+var serviceFees = fees.TrusttFee;
+```
+
+
+
+
+# Example
+
+The following link, contain an example code. This app consumes the oficial API to transact a payment using you gold resources.
