@@ -117,7 +117,16 @@ var customer = new Customer
 
 Once you have attached cards (payloads), you are ready to proceed with a payment. All you need is send the payload (that whatever you want data already added in the above example) following currency (only USD supported by now, EUR comming zoom) and amount.
 
+```C#
+var payment = new Payment
+{
+    Payload = "1111-2222-3333-444+SomeBody",
+    Currency = "USD",
+    Amount = 15000
+};
 
-# Application Implementation Example
+// perform payment and get back transaction
+var transaction = _api.Payment(payment)
+```
 
-The following link, contain an example code. This app consumes the oficial API to transact a payment using trustt user's gold resources.
+`Payment()` method will reply back a `PosTransaction` object. Yo can store the ID or other interest information. We strongly recommend to store transaction's ID, in order to solve eventually issues with some payment.
