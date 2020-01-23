@@ -86,8 +86,21 @@ catch (Exception ex)
 }
 ```
 
-## 
+## CardAttach
 
+Before see any example we must understand the *Payload* field. We don't handle your clients, we just need a identification, so, in this endpoint, all we do is, associate a client with something of you own .
+
+In the following example, we use a card number to associate a trustt customer. We identify trustt customers by their email address. So, we assume the Payload as whatever you want, but in the following example, will be card number plus some string, but may also be a hash of this card number, a json, whatever you want. Just store it and call it latter.
+
+```C#
+var card = new CardInfo
+{
+    Email = "some.body1988@domain.com",
+    Payload = "1111-2222-3333-444+SomeBody"
+};
+
+var add = _api.CardAttach(card);
+```
 
 
 # Application Implementation Example
